@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-/**
+
 import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar } from 'react-native';
 import axios from "axios";
 
@@ -9,41 +9,40 @@ import axios from "axios";
 // username, temp, pH, ammonia, nitrate, nitrite, light_illuminated, last_fed (would represent date)
 // get.body({"id": "615a0f8ce4074662ba8754c5"})
 
-
+/**
 const DATA = [
-    {
-        id: 'username',
-        title: 'Username:',
-    },
     {
         id: 'temp',
         title: 'Water temperature:',
+        data: 0,
     },
     {
         id: 'pH',
         title: 'Water pH level:',
+        data: 0,
     },
     {
         id: 'ammonia',
         title: 'Ammonia reading:',
+        data: 0,
     },
     {
         id: 'nitrate',
         title: 'Nitrate reading:',
+        data: 0,
     },
     {
         id: 'nitrite',
         title: 'Nitrite reading:',
+        data: 0,
     },
     {
         id: 'light_illuminated',
         title: 'Illumination:',
-    },
-    {
-        id: 'last_fed',
-        title: 'Date:',
+        data: 0,
     },
 ];
+ **/
 
 const APP_TITLE = [
     {
@@ -53,14 +52,20 @@ const APP_TITLE = [
 ];
 
 function fetch_data( data_to_fetch ) {
-    axios.get('https://smart-aquarium-backend.herokuapp.com/api/' + data_to_fetch)
-        .then(function (response) {
-            console.log(response.success);
-            return response.success;
+    for (let i = 0; i < data_to_fetch.length; i++) {
+    fetch("https://smart-aquarium-backend.herokuapp.com/api/" + data_to_fetch[i].id + "?id=615a0f8ce4074662ba8754c5", {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => response.json())
+        .then((responseData) => {
+            data_to_fetch[i].data = responseData;
         })
-        .catch(function (error) {
-            console.log(error);
-        })
+        .catch(error => console.log(error)) //to catch the errors if any
+}
 }
 
 
@@ -78,36 +83,122 @@ const TitleItem = ({ title }) => (
     </View>
 );
 
+export default class App extends React.Component{
+    constructor(props) {
+        super(props);
+        this.ids = ['temp', 'pH', 'ammonia', 'nitrate', 'nitrite', 'light_illuminated'];
+        this.state = {
+            data:[0,0,0,0,0,0] };
+    }
+    componentDidMount() {
+        for (let i = 0; i < this.ids.length; i++) {
+            fetch("https://smart-aquarium-backend.herokuapp.com/api/" + this.ids[i] + "?id=615a0f8ce4074662ba8754c5", {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => response.json())
+                .then((responseData) => {
+                    let newResponseData = this.state.data
+                    newResponseData[i] = responseData
+                    this.setState({data: newResponseData});
+                    console.log(responseData);
+                })
+                .catch(error => console.log(error)) //to catch the errors if any
+        }
+        }
+
+
+    render(){
+        return (
+            <SafeAreaView style={styles.container}>
+                <FlatList
+                    data={APP_TITLE}
+                    renderItem={({ item, index, separators}) => (
+                        <TitleItem title={item.title} />
+                    )}
+                />
+                <FlatList
+                    data={["temp:"]}
+                    renderItem={({ item, index, separators}) => (
+                        <View style={styles.item}>
+                            <Text style={styles.title}>Temperature:</Text>
+                            <Text style={styles.title}>{this.state.data[0]}</Text>
+                            <Text style={styles.title}>pH:</Text>
+                            <Text style={styles.title}>{this.state.data[1]}</Text>
+                            <Text style={styles.title}>Ammonia:</Text>
+                            <Text style={styles.title}>{this.state.data[2]}</Text>
+                            <Text style={styles.title}>Nitrate:</Text>
+                            <Text style={styles.title}>{this.state.data[3]}</Text>
+                            <Text style={styles.title}>Nitrite:</Text>
+                            <Text style={styles.title}>{this.state.data[4]}</Text>
+                            <Text style={styles.title}>Is the light illuminated?</Text>
+                            <Text style={styles.title}>{this.state.data[5].toString()}</Text>
+                        </View>
+                    )}
+                />
+            </SafeAreaView>
+        );
+    }
+}
+
 const MyComponent = () => {
 
-    const [data, setData] = React.useState('')
+    let DATA = [
+        {
+            id: 'temp',
+            title: 'Water temperature:',
+            data: 0,
+        },
+        {
+            id: 'pH',
+            title: 'Water pH level:',
+            data: 0,
+        },
+        {
+            id: 'ammonia',
+            title: 'Ammonia reading:',
+            data: 0,
+        },
+        {
+            id: 'nitrate',
+            title: 'Nitrate reading:',
+            data: 0,
+        },
+        {
+            id: 'nitrite',
+            title: 'Nitrite reading:',
+            data: 0,
+        },
+        {
+            id: 'light_illuminated',
+            title: 'Illumination:',
+            data: 0,
+        },
+    ];
 
-    const axiosApiCall = ({ item }) => {
-        axios({
-            "method": "GET",
-            "url": "https://smart-aquarium-backend.herokuapp.com/api/" + item.id,
-            "headers": {
-                "x-rapidapi-host": "smart-aquarium-backend.herokuapp.com",
-                "x-rapidapi-key": "615a0f8ce4074662ba8754c5",
-                "useQueryString": true
-            }, "params": {
-                "language_code": "en"
-            }
+    for (let i = 0; i < DATA.length; i++) {
+        fetch("https://smart-aquarium-backend.herokuapp.com/api/" + DATA[i].id + "?id=615a0f8ce4074662ba8754c5", {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
         })
-            .then((response) => {
-                console.log("gets to here");
-                console.log(response);
-                setData(response.success);
+            .then(response => response.json())
+            .then((responseData) => {
+                DATA[i].data = responseData;
+                console.log(DATA[i].data);
             })
-            .catch((error) => {
-                console.log(error)
-            })
+            .catch(error => console.log(error)) //to catch the errors if any
     }
 
     const renderItem = ({ item }) => (
         <View style={styles.item}>
             <Text style={styles.title}>{item.title}</Text>
-            <Text style={styles.title}>{data}</Text>
+            <Text style={styles.title}>{item.data}</Text>
         </View>
     );
 
@@ -115,6 +206,8 @@ const MyComponent = () => {
         <TitleItem title={item.title} />
     );
 
+    console.log("does get here");
+    console.log(DATA[0].data)
 
     return (
         <SafeAreaView style={styles.container}>
@@ -131,6 +224,7 @@ const MyComponent = () => {
         </SafeAreaView>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -165,9 +259,7 @@ const styles2 = StyleSheet.create({
     },
 });
 
-export default MyComponent;
- **/
-
+/**
 import {
     StyleSheet,
     View,
@@ -214,13 +306,13 @@ export default class App extends React.Component {
             <Text style={styles.lightText}>Employee Name : {data}</Text>
         </TouchableOpacity>
     render(){
-        /**if(this.state.loading){
+        if(this.state.loading){
             console.log("gets here");
             return(
                 <View style={styles.loader}>
                     <ActivityIndicator size="large" color="#000000"/>
                 </View>
-            )}**/
+            )}
         console.log(this.state.dataSource)
         return(
             <View style={styles.container}>
@@ -250,3 +342,4 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff"
     }
 });
+**/
