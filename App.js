@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar } from 'react-native';
+import { SafeAreaView, Button, View, FlatList, StyleSheet, Text, StatusBar, Alert, TouchableOpacity } from 'react-native';
 import axios from "axios";
 
 // https://smart-aquarium-backend.herokuapp.com/api/temp
@@ -112,6 +112,30 @@ export default class App extends React.Component{
                         </View>
                     )}
                 />
+                <TouchableOpacity
+                    style={styles2.button}
+                    onPress={() => Alert.alert('Fish fed')}
+                >
+                    <Text style={styles2.text}>Feed fish</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles2.button}
+                    onPress={() => Alert.alert('Running quality test')}
+                >
+                    <Text style={styles2.text}>Run quality test</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles2.button}
+                    onPress={() => Alert.alert('Turning light on/off')}
+                >
+                    <Text style={styles2.text}>Turn light on/off</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles2.button}
+                    onPress={() => Alert.alert('Implementing some other function')}
+                >
+                    <Text style={styles2.text}>Some other function</Text>
+                </TouchableOpacity>
             </SafeAreaView>
         );
     }
@@ -143,6 +167,13 @@ const styles2 = StyleSheet.create({
         marginTop: StatusBar.currentHeight || 0,
         marginBottom: 20,
     },
+    button: {
+        alignItems: "center",
+        backgroundColor: "#1e5dc2",
+        padding: 10,
+        marginVertical: 16,
+        marginHorizontal: 16
+    },
     item: {
         backgroundColor: '#1e5dc2',
         padding: 20,
@@ -151,5 +182,8 @@ const styles2 = StyleSheet.create({
     },
     title: {
         fontSize: 32
+    },
+    text: {
+        color: "#ffffff"
     },
 });
