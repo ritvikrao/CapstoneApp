@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Moment from 'moment';
 
 import { SafeAreaView, Button, View, FlatList, StyleSheet, Text, StatusBar, Alert, TouchableOpacity } from 'react-native';
 import axios from "axios";
@@ -49,7 +50,47 @@ const TitleItem = ({ title }) => (
     </View>
 );
 
-const IDS = ['temp', 'pH', 'ammonia', 'nitrate', 'nitrite', 'light_illuminated'];
+const IDS = ['temp', 'pH', 'ammonia', 'nitrate', 'nitrite', 'light_illuminated', 'last_fed'];
+
+/*
+    * https://smart-aquarium-backend.herokuapp.com/api/(X):
+		feed
+		runChemicalTest
+		heaterToggle
+		lightToggle
+	message body:  {"id": "615a0f8ce4074662ba8754c5", "set": boolean(should be true from app)}
+    * */
+
+const send_post_request = (requestString) => (
+    fetch("https://smart-aquarium-backend.herokuapp.com/api/" + requestString, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"id": "615a0f8ce4074662ba8754c5", "set": true})
+    })
+        .then(response => response.json())
+        .then(() => {
+            console.log("sent data successfully")
+        })
+        .catch(error => console.log(error))
+);
+
+const options = {
+    year: 'numeric', month: 'numeric', day: 'numeric',
+    hour: 'numeric', minute: 'numeric', second: 'numeric',
+    hour12: true,
+    timeZone: 'America/New_York'
+};
+
+const build_date = (date) => (
+    new Intl.DateTimeFormat('en-US', options).format(new Date(date))
+);
+
+
+
+
+
 
 export default class App extends React.Component{
     constructor(props) {
@@ -60,7 +101,7 @@ export default class App extends React.Component{
 
     componentDidMount() {
         this.pollAPI();
-        setInterval(() => {this.pollAPI()}, 5000);
+        setInterval(() => {this.pollAPI()}, 500);
     }
 
     pollAPI() {
@@ -83,6 +124,7 @@ export default class App extends React.Component{
     };
 
     render(){
+        Moment.locale('en');
         return (
             <SafeAreaView style={styles.container}>
                 <FlatList
@@ -109,32 +151,34 @@ export default class App extends React.Component{
                             {this.state.data[5] ? (
                                 <Text style={styles.value}>On</Text>) : (
                                 <Text style={styles.value}>Off</Text>)}
+                            <Text style={styles.title}>Time the fish were last fed:</Text>
+                            <Text style={styles.value}>{Moment(this.state.data[6]).format('LLLL')}</Text>
                         </View>
                     )}
                 />
                 <TouchableOpacity
                     style={styles2.button}
-                    onPress={() => Alert.alert('Fish fed')}
+                    onPress={() => send_post_request('feed')}
                 >
                     <Text style={styles2.text}>Feed fish</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles2.button}
-                    onPress={() => Alert.alert('Running quality test')}
+                    onPress={() => send_post_request('runChemicalTest')}
                 >
-                    <Text style={styles2.text}>Run quality test</Text>
+                    <Text style={styles2.text}>Run chemical test</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles2.button}
-                    onPress={() => Alert.alert('Turning light on/off')}
+                    onPress={() => send_post_request('heaterToggle')}
+                >
+                    <Text style={styles2.text}>Turn heater on/off</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles2.button}
+                    onPress={() => send_post_request('lightToggle')}
                 >
                     <Text style={styles2.text}>Turn light on/off</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles2.button}
-                    onPress={() => Alert.alert('Implementing some other function')}
-                >
-                    <Text style={styles2.text}>Some other function</Text>
                 </TouchableOpacity>
             </SafeAreaView>
         );
