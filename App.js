@@ -50,7 +50,7 @@ const TitleItem = ({ title }) => (
     </View>
 );
 
-const IDS = ['temp', 'pH', 'ammonia', 'nitrate', 'nitrite', 'light_illuminated', 'last_fed'];
+const IDS = ['temp', 'pH', 'ammonia', 'nitrate', 'nitrite', 'light_illuminated', 'heater_on', 'last_fed'];
 
 /*
     * https://smart-aquarium-backend.herokuapp.com/api/(X):
@@ -96,7 +96,7 @@ export default class App extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            data:[0,0,0,0,0,0]};
+            data:[0,0,0,0,0,0,0]};
     }
 
     componentDidMount() {
@@ -151,8 +151,12 @@ export default class App extends React.Component{
                             {this.state.data[5] ? (
                                 <Text style={styles.value}>On</Text>) : (
                                 <Text style={styles.value}>Off</Text>)}
+                            <Text style={styles.title}>Heater Status:</Text>
+                            {this.state.data[6] ? (
+                                <Text style={styles.value}>On</Text>) : (
+                                <Text style={styles.value}>Off</Text>)}
                             <Text style={styles.title}>Time the fish were last fed:</Text>
-                            <Text style={styles.value}>{Moment(this.state.data[6]).format('LLLL')}</Text>
+                            <Text style={styles.value}>{Moment(this.state.data[7]).format('LLLL')}</Text>
                         </View>
                     )}
                 />
