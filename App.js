@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Moment from 'moment';
 
-import { SafeAreaView, Button, View, FlatList, StyleSheet, Text, StatusBar, Alert, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, TouchableOpacity } from 'react-native';
 import axios from "axios";
 
 // https://smart-aquarium-backend.herokuapp.com/api/temp
@@ -14,7 +14,7 @@ import axios from "axios";
 const APP_TITLE = [
     {
         id: '1',
-        title: 'Smart Aquarium App',
+        title: 'Smart Aquarium',
     },
 ];
 
@@ -157,37 +157,28 @@ export default class App extends React.Component{
         return (
             <SafeAreaView style={styles.container}>
                 <FlatList
+                    style={styles.header}
                     data={APP_TITLE}
                     renderItem={({ item, index, separators}) => (
                         <TitleItem title={item.title} />
                     )}
                 />
                 <FlatList
-                    data={["temp:"]}
+                    style={styles.header}
+                    data={["temp"]}
                     renderItem={({ item, index, separators}) => (
                         <View style={styles.item}>
-                            <Text style={styles.title}>Temperature:</Text>
-                            <Text style={styles.value}>{this.state.data[0]}</Text>
-                            <Text style={styles.title}>pH:</Text>
-                            <Text style={styles.value}>{this.state.data[1]}</Text>
-                            <Text style={styles.title}>Ammonia Status:</Text>
-                            <Text style={styles.value}>{this.ammoniaTest(this.state.data[2])}</Text>
-                            <Text style={styles.title}>Nitrate Status:</Text>
-                            <Text style={styles.value}>{this.nitrateTest(this.state.data[3])}</Text>
-                            <Text style={styles.title}>Nitrite Status:</Text>
-                            <Text style={styles.value}>{this.nitriteTest(this.state.data[4])}</Text>
-                            <Text style={styles.title}>Light Status:</Text>
-                            {this.state.data[5] ? (
-                                <Text style={styles.value}>On</Text>) : (
-                                <Text style={styles.value}>Off</Text>)}
-                            <Text style={styles.title}>Heater Status:</Text>
-                            {this.state.data[6] ? (
-                                <Text style={styles.value}>On</Text>) : (
-                                <Text style={styles.value}>Off</Text>)}
-                            <Text style={styles.title}>Time the fish were last fed:</Text>
-                            <Text style={styles.value}>{Moment(this.state.data[7]).format('LLLL')}</Text>
+                            <Text style={styles.title}>Temperature: {this.state.data[0]}</Text>
+                            <Text style={styles.title}>pH: {this.state.data[1]}</Text>
+                            <Text style={styles.title}>Ammonia Status: {this.ammoniaTest(this.state.data[2])}</Text>
+                            <Text style={styles.title}>Nitrate Status: {this.nitrateTest(this.state.data[3])}</Text>
+                            <Text style={styles.title}>Nitrite Status: {this.nitriteTest(this.state.data[4])}</Text>
+                            <Text style={styles.title}>Light Status: {this.state.data[5] ? "On" : "Off"}</Text>
+                            <Text style={styles.title}>Heater Status: {this.state.data[6] ? "On" : "Off"}</Text>
+                            <Text style={styles.title}>Fish Last Fed: {Moment(this.state.data[7]).format('LLLL')}</Text>
                         </View>
                     )}
+                    keyExtractor={(item, index) => index.toString()}
                 />
                 <TouchableOpacity
                     style={styles2.button}
@@ -225,13 +216,32 @@ const styles = StyleSheet.create({
     },
     item: {
         backgroundColor: '#1e5dc2',
-        padding: 40,
+        padding: 20,
         marginVertical: 8,
         marginHorizontal: 16,
+        borderRadius: 30,
+    },
+    dataList: {
+        textAlign: "left",
+        backgroundColor: '#1e5dc2',
+        padding: 10,
+        marginVertical: 8,
+        marginHorizontal: 16,
+        borderRadius: 30,
+    },
+    header: {
+        textAlign: "center",
+        textAlignVertical: "center",
+        backgroundColor: '#1e5dc2',
+        padding: 10,
+        marginVertical: 8,
+        marginHorizontal: 16,
+        borderRadius: 30,
     },
     title: {
         fontSize: 24,
-        color: "#ffffff"
+        color: "#ffffff",
+        marginBottom: 20,
     },
     value: {
         fontSize: 24,
@@ -251,7 +261,8 @@ const styles2 = StyleSheet.create({
         backgroundColor: "#1e5dc2",
         padding: 10,
         marginVertical: 16,
-        marginHorizontal: 16
+        marginHorizontal: 16,
+        borderRadius: 30,
     },
     item: {
         backgroundColor: '#1e5dc2',
