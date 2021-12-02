@@ -2,14 +2,6 @@ import React, { useState, useEffect } from "react";
 import Moment from 'moment';
 
 import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, TouchableOpacity } from 'react-native';
-import axios from "axios";
-
-// https://smart-aquarium-backend.herokuapp.com/api/temp
-// also could be: /id:jdp2389p1329djp at the end of the url
-// temp = variable that I am trying to access
-// username, temp, pH, ammonia, nitrate, nitrite, light_illuminated, last_fed (would represent date)
-// get.body({"id": "615a0f8ce4074662ba8754c5"})
-
 
 const APP_TITLE = [
     {
@@ -18,32 +10,6 @@ const APP_TITLE = [
     },
 ];
 
-function fetch_data( data_to_fetch ) {
-    for (let i = 0; i < data_to_fetch.length; i++) {
-    fetch("https://smart-aquarium-backend.herokuapp.com/api/" + data_to_fetch[i].id + "?id=615a0f8ce4074662ba8754c5", {
-        method: 'GET',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-    })
-        .then(response => response.json())
-        .then((responseData) => {
-            data_to_fetch[i].data = responseData;
-        })
-        .catch(error => console.log(error)) //to catch the errors if any
-}
-}
-
-
-
-const Item = ({ title, data_to_fetch }) => (
-    <View style={styles.item}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.title}>{data_to_fetch}</Text>
-    </View>
-);
-
 const TitleItem = ({ title }) => (
     <View style={styles2.item}>
         <Text style={styles2.title}>{title}</Text>
@@ -51,15 +17,6 @@ const TitleItem = ({ title }) => (
 );
 
 const IDS = ['temp', 'pH', 'ammonia', 'nitrate', 'nitrite', 'light_illuminated', 'heater_on', 'last_fed'];
-
-/*
-    * https://smart-aquarium-backend.herokuapp.com/api/(X):
-		feed
-		runChemicalTest
-		heaterToggle
-		lightToggle
-	message body:  {"id": "615a0f8ce4074662ba8754c5", "set": boolean(should be true from app)}
-    * */
 
 const send_post_request = (requestString) => (
     fetch("https://smart-aquarium-backend.herokuapp.com/api/" + requestString, {
@@ -75,21 +32,6 @@ const send_post_request = (requestString) => (
         })
         .catch(error => console.log(error))
 );
-
-const options = {
-    year: 'numeric', month: 'numeric', day: 'numeric',
-    hour: 'numeric', minute: 'numeric', second: 'numeric',
-    hour12: true,
-    timeZone: 'America/New_York'
-};
-
-const build_date = (date) => (
-    new Intl.DateTimeFormat('en-US', options).format(new Date(date))
-);
-
-
-
-
 
 
 export default class App extends React.Component{
@@ -142,7 +84,7 @@ export default class App extends React.Component{
     }
 
     nitriteTest(level){
-        if(level < 0.5){
+        if(level < 1.2){
             return "Safe"
         }
         else{
