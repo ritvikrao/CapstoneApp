@@ -125,43 +125,28 @@ export default class App extends React.Component{
 
     ammoniaTest(level){
         if(level < 0.25){
-            return "ideal"
+            return "Safe"
         }
-        else if(level < 0.5){
-            return "safe"
-        }
-        else if(level < 3.0){
-            return "stress"
-        }
-        else if(level < 6.0){
-            return "harmful"
-        }
-        else{
-            return "danger"
+        else {
+            return "Unsafe"
         }
     }
 
     nitrateTest(level){
         if(level < 80){
-            return "safe"
-        }
-        else if(level < 160){
-            return "unsafe"
+            return "Safe"
         }
         else{
-            return "danger"
+            return "Unsafe"
         }
     }
 
     nitriteTest(level){
         if(level < 0.5){
-            return "safe"
-        }
-        else if(level < 3.0){
-            return "unsafe"
+            return "Safe"
         }
         else{
-            return "danger"
+            return "Unsafe"
         }
     }
 
@@ -185,17 +170,11 @@ export default class App extends React.Component{
                             <Text style={styles.value}>{this.state.data[0]}</Text>
                             <Text style={styles.title}>pH:</Text>
                             <Text style={styles.value}>{this.state.data[1]}</Text>
-                            <Text style={styles.title}>Ammonia:</Text>
-                            <Text style={styles.value}>{this.state.data[2]}</Text>
-                            <Text style={styles.title}>Ammonia status:</Text>
+                            <Text style={styles.title}>Ammonia Status:</Text>
                             <Text style={styles.value}>{this.ammoniaTest(this.state.data[2])}</Text>
-                            <Text style={styles.title}>Nitrate:</Text>
-                            <Text style={styles.value}>{this.state.data[3]}</Text>
-                            <Text style={styles.title}>Nitrate status:</Text>
+                            <Text style={styles.title}>Nitrate Status:</Text>
                             <Text style={styles.value}>{this.nitrateTest(this.state.data[3])}</Text>
-                            <Text style={styles.title}>Nitrite:</Text>
-                            <Text style={styles.value}>{this.state.data[4]}</Text>
-                            <Text style={styles.title}>Nitrite status:</Text>
+                            <Text style={styles.title}>Nitrite Status:</Text>
                             <Text style={styles.value}>{this.nitriteTest(this.state.data[4])}</Text>
                             <Text style={styles.title}>Light Status:</Text>
                             {this.state.data[5] ? (
