@@ -119,9 +119,53 @@ export default class App extends React.Component{
                     newResponseData[i] = responseData
                     this.setState({data: newResponseData});
                 })
-                .catch(error => console.log(error)) //to catch the errors if any
+                .catch(error => console.log(error));
         }
     };
+
+    ammoniaTest(level){
+        if(level < 0.25){
+            return "ideal"
+        }
+        else if(level < 0.5){
+            return "safe"
+        }
+        else if(level < 3.0){
+            return "stress"
+        }
+        else if(level < 6.0){
+            return "harmful"
+        }
+        else{
+            return "danger"
+        }
+    }
+
+    nitrateTest(level){
+        if(level < 80){
+            return "safe"
+        }
+        else if(level < 160){
+            return "unsafe"
+        }
+        else{
+            return "danger"
+        }
+    }
+
+    nitriteTest(level){
+        if(level < 0.5){
+            return "safe"
+        }
+        else if(level < 3.0){
+            return "unsafe"
+        }
+        else{
+            return "danger"
+        }
+    }
+
+
 
     render(){
         Moment.locale('en');
@@ -143,10 +187,16 @@ export default class App extends React.Component{
                             <Text style={styles.value}>{this.state.data[1]}</Text>
                             <Text style={styles.title}>Ammonia:</Text>
                             <Text style={styles.value}>{this.state.data[2]}</Text>
+                            <Text style={styles.title}>Ammonia status:</Text>
+                            <Text style={styles.value}>{this.ammoniaTest(this.state.data[2])}</Text>
                             <Text style={styles.title}>Nitrate:</Text>
                             <Text style={styles.value}>{this.state.data[3]}</Text>
+                            <Text style={styles.title}>Nitrate status:</Text>
+                            <Text style={styles.value}>{this.nitrateTest(this.state.data[3])}</Text>
                             <Text style={styles.title}>Nitrite:</Text>
                             <Text style={styles.value}>{this.state.data[4]}</Text>
+                            <Text style={styles.title}>Nitrite status:</Text>
+                            <Text style={styles.value}>{this.nitriteTest(this.state.data[4])}</Text>
                             <Text style={styles.title}>Light Status:</Text>
                             {this.state.data[5] ? (
                                 <Text style={styles.value}>On</Text>) : (
@@ -201,11 +251,13 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
     },
     title: {
-        fontSize: 24
+        fontSize: 24,
+        color: "#ffffff"
     },
     value: {
         fontSize: 24,
-        marginBottom: 15
+        marginBottom: 15,
+        color: "#ffffff"
     }
 });
 
@@ -229,7 +281,8 @@ const styles2 = StyleSheet.create({
         marginHorizontal: 16
     },
     title: {
-        fontSize: 32
+        fontSize: 32,
+        color: "#ffffff"
     },
     text: {
         color: "#ffffff"
